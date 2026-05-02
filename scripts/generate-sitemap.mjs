@@ -4,8 +4,6 @@ import path from "node:path";
 
 const SITE_URL = "https://homefixscope.com";
 
-// Use Vite-style env names first, then script-style names, then fallback.
-// This lets the script work locally and in other environments.
 const SUPABASE_URL =
   process.env.VITE_SUPABASE_URL ||
   process.env.SUPABASE_URL ||
@@ -44,26 +42,27 @@ function buildUrlTag(loc, lastmod) {
     .join("\n");
 }
 
-function familySlugFromBranchKey(branchKey = "") {
+function getDomainSlug(branchKey = "") {
+  return String(branchKey).split("_")[0] || "";
+}
+
+function getFamilySlug(branchKey = "") {
   const parts = String(branchKey).split("_");
   parts.shift();
   return parts.join("-");
 }
 
-async function fetchAll(table, select, applyFilters) {
+async function fetchAllHomeFixRows() {
   const pageSize = 1000;
   let from = 0;
   let allRows = [];
 
   while (true) {
-    let query = supabase
-      .from(table)
-      .select(select)
+    const { data, error } = await supabase
+      .from("branch_seed_overview")
+      .select("branch_key, slug, page_status, published_at")
+      .eq("page_status", "published")
       .range(from, from + pageSize - 1);
-
-    query = applyFilters(query);
-
-    const { data, error } = await query;
 
     if (error) throw error;
 
@@ -71,17 +70,18 @@ async function fetchAll(table, select, applyFilters) {
     allRows = [...allRows, ...batch];
 
     if (batch.length < pageSize) break;
-
     from += pageSize;
   }
 
-  return allRows;
+  return allRows.filter((row) => {
+    const domainSlug = getDomainSlug(row.branch_key);
+    return VERTICALS.includes(domainSlug);
+  });
 }
 
 async function main() {
   const urls = new Map();
 
-  // Static routes
   urls.set(`${SITE_URL}/`, {
     loc: `${SITE_URL}/`,
     lastmod: null,
@@ -92,60 +92,35 @@ async function main() {
     lastmod: null,
   });
 
-  // Domain routes
   for (const vertical of VERTICALS) {
     const loc = `${SITE_URL}/${vertical}`;
-    urls.set(loc, {
-      loc,
-      lastmod: null,
-    });
+    urls.set(loc, { loc, lastmod: null });
   }
 
-  // Decision page routes
-  const pages = await fetchAll(
-    "pages",
-    "slug, page_status, updated_at, published_at",
-    (query) => query.eq("page_status", "published")
-  );
+  const rows = await fetchAllHomeFixRows();
 
-  for (const page of pages ?? []) {
-    if (!page.slug) continue;
-
-    const loc = `${SITE_URL}/p/${page.slug}`;
-    const lastmod = page.updated_at || page.published_at || null;
-
-    urls.set(loc, { loc, lastmod });
-  }
-
-  // Cluster/question-set routes from branch_key, not branch_label.
-  const branches = await fetchAll(
-    "branch_seed_overview",
-    "branch_key, page_status",
-    (query) => query.eq("page_status", "published")
-  );
-
-  for (const row of branches ?? []) {
+  for (const row of rows) {
     const branchKey = row.branch_key || "";
-    if (!branchKey.includes("_")) continue;
+    const domainSlug = getDomainSlug(branchKey);
+    const familySlug = getFamilySlug(branchKey);
 
-    const domainSlug = branchKey.split("_")[0];
     if (!VERTICALS.includes(domainSlug)) continue;
 
-    const familySlug = familySlugFromBranchKey(branchKey);
-    if (!familySlug) continue;
+    if (familySlug) {
+      const clusterLoc = `${SITE_URL}/${domainSlug}/${familySlug}`;
+      urls.set(clusterLoc, {
+        loc: clusterLoc,
+        lastmod: row.published_at || null,
+      });
+    }
 
-    const domainLoc = `${SITE_URL}/${domainSlug}`;
-    const familyLoc = `${SITE_URL}/${domainSlug}/${familySlug}`;
-
-    urls.set(domainLoc, {
-      loc: domainLoc,
-      lastmod: null,
-    });
-
-    urls.set(familyLoc, {
-      loc: familyLoc,
-      lastmod: null,
-    });
+    if (row.slug) {
+      const pageLoc = `${SITE_URL}/p/${row.slug}`;
+      urls.set(pageLoc, {
+        loc: pageLoc,
+        lastmod: row.published_at || null,
+      });
+    }
   }
 
   const xml = [
