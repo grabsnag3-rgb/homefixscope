@@ -2,38 +2,27 @@ import { createClient } from "@supabase/supabase-js";
 import fs from "node:fs/promises";
 import path from "node:path";
 
-const SITE_URL = "https://lossscope.com";
-const SUPABASE_URL = process.env.SUPABASE_URL || "https://nwxcancqulxjwdiofyxy.supabase.co";
+const SITE_URL = "https://homefixscope.com";
+
+// Use Vite-style env names first, then script-style names, then fallback.
+// This lets the script work locally and in other environments.
+const SUPABASE_URL =
+  process.env.VITE_SUPABASE_URL ||
+  process.env.SUPABASE_URL ||
+  "https://nwxcancqulxjwdiofyxy.supabase.co";
+
 const SUPABASE_ANON_KEY =
-  process.env.SUPABASE_ANON_KEY || "sb_publishable_qeHpjmBA_STovuCQL-fjDQ_U5eOEoy-";
+  process.env.VITE_SUPABASE_ANON_KEY ||
+  process.env.SUPABASE_ANON_KEY ||
+  "sb_publishable_qeHpjmBA_STovuCQL-fjDQ_U5eOEoy-";
+
+const VERTICALS = ["plumbing", "electrical", "leaks", "foundation", "roofing", "hvac"];
 
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
   throw new Error("Missing Supabase env vars.");
 }
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-function slugifyLabel(value = "") {
-  return value
-    .toLowerCase()
-    .trim()
-    .replaceAll("→", " ")
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
-}
-
-function parseBranchLabel(branchLabel = "") {
-  const parts = String(branchLabel)
-    .split("→")
-    .map((part) => part.trim())
-    .filter(Boolean);
-
-  return {
-    domainLabel: parts[0] || "",
-    familyLabel: parts[1] || "",
-  };
-}
 
 function xmlEscape(value = "") {
   return String(value)
@@ -53,6 +42,12 @@ function buildUrlTag(loc, lastmod) {
   ]
     .filter(Boolean)
     .join("\n");
+}
+
+function familySlugFromBranchKey(branchKey = "") {
+  const parts = String(branchKey).split("_");
+  parts.shift();
+  return parts.join("-");
 }
 
 async function fetchAll(table, select, applyFilters) {
@@ -86,6 +81,7 @@ async function fetchAll(table, select, applyFilters) {
 async function main() {
   const urls = new Map();
 
+  // Static routes
   urls.set(`${SITE_URL}/`, {
     loc: `${SITE_URL}/`,
     lastmod: null,
@@ -96,6 +92,16 @@ async function main() {
     lastmod: null,
   });
 
+  // Domain routes
+  for (const vertical of VERTICALS) {
+    const loc = `${SITE_URL}/${vertical}`;
+    urls.set(loc, {
+      loc,
+      lastmod: null,
+    });
+  }
+
+  // Decision page routes
   const pages = await fetchAll(
     "pages",
     "slug, page_status, updated_at, published_at",
@@ -111,29 +117,30 @@ async function main() {
     urls.set(loc, { loc, lastmod });
   }
 
+  // Cluster/question-set routes from branch_key, not branch_label.
   const branches = await fetchAll(
     "branch_seed_overview",
-    "branch_label, page_status",
+    "branch_key, page_status",
     (query) => query.eq("page_status", "published")
   );
 
   for (const row of branches ?? []) {
-    const { domainLabel, familyLabel } = parseBranchLabel(row.branch_label);
+    const branchKey = row.branch_key || "";
+    if (!branchKey.includes("_")) continue;
 
-    if (!domainLabel) continue;
+    const domainSlug = branchKey.split("_")[0];
+    if (!VERTICALS.includes(domainSlug)) continue;
 
-    const domainSlug = slugifyLabel(domainLabel);
+    const familySlug = familySlugFromBranchKey(branchKey);
+    if (!familySlug) continue;
+
     const domainLoc = `${SITE_URL}/${domainSlug}`;
+    const familyLoc = `${SITE_URL}/${domainSlug}/${familySlug}`;
 
     urls.set(domainLoc, {
       loc: domainLoc,
       lastmod: null,
     });
-
-    if (!familyLabel) continue;
-
-    const familySlug = slugifyLabel(familyLabel);
-    const familyLoc = `${SITE_URL}/${domainSlug}/${familySlug}`;
 
     urls.set(familyLoc, {
       loc: familyLoc,

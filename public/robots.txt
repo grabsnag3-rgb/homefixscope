@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://lossscope.com/sitemap.xml
+Sitemap: https://homefixscope.com/sitemap.xml
