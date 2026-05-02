@@ -1,0 +1,96 @@
+:root {
+  --bg-page: #1c1b18;
+  --bg-page-top: #221f1a;
+  --bg-plane: rgba(255, 248, 236, 0.04);
+  --bg-plane-strong: rgba(255, 248, 236, 0.055);
+  --bg-bronze: #7a5c3f;
+  --bg-bronze-2: #8a6a48;
+
+  --text-primary: rgba(255, 248, 238, 0.94);
+  --text-secondary: rgba(255, 241, 219, 0.72);
+  --text-muted: rgba(255, 239, 214, 0.54);
+  --text-on-bronze: rgba(255, 249, 241, 0.94);
+
+  --line-soft: rgba(255, 243, 220, 0.08);
+  --line-strong: rgba(255, 243, 220, 0.12);
+
+  --radius-sm: 8px;
+  --radius-md: 10px;
+
+  --shadow-plane:
+    inset 0 0 0 1px rgba(255, 244, 221, 0.08),
+    0 8px 20px rgba(0, 0, 0, 0.08);
+
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  --font-slab: "Roboto Slab", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+
+  --space-1: 6px;
+  --space-2: 10px;
+  --space-3: 14px;
+  --space-4: 18px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 40px;
+  --space-8: 56px;
+
+  /* decision page spacing controls */
+--decision-breadcrumb-gap: 6px;
+--decision-watermark-height: 48svh;
+--decision-question-offset: 6px;
+--decision-question-line-gap: 10px;
+--decision-question-eyebrow-gap: 8px;
+--decision-top-sequence-gap: 6px;
+}
+
+body {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(177, 162, 123, 0.04), transparent 34%),
+    linear-gradient(180deg, var(--bg-page-top) 0%, var(--bg-page) 100%);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+}
+
+.page-shell {
+  min-height: 100vh;
+}
+
+.page-width {
+  width: min(100%, 430px);
+  margin: 0 auto;
+  padding: 18px 16px 80px;
+}
+
+.stack-lg > * + * {
+  margin-top: 40px;
+}
+
+.stack-md > * + * {
+  margin-top: 32px;
+}
+
+.stack-sm > * + * {
+  margin-top: 18px;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.section-copy {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.list-reset {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}

@@ -1,0 +1,106 @@
+.decision-cta {
+  box-sizing: border-box;
+}
+
+.decision-cta--decision-inline {
+  position: relative;
+  margin: 44px 0 46px;
+  padding: clamp(24px, 4vw, 34px);
+  border: 1px solid rgba(255, 244, 221, 0.09);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 244, 221, 0.04), rgba(255, 244, 221, 0.015)),
+    rgba(10, 10, 9, 0.34);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 244, 221, 0.05),
+    0 22px 60px rgba(0, 0, 0, 0.14);
+}
+
+.decision-cta--decision-inline::before {
+  content: "";
+  position: absolute;
+  left: 24px;
+  top: 0;
+  width: 120px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(232, 153, 82, 0.72);
+}
+
+.decision-cta--decision-inline .decision-cta__label {
+  margin-bottom: 14px;
+  color: rgba(232, 153, 82, 0.82);
+  font-size: 0.74rem;
+  font-weight: 850;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.decision-cta--decision-inline .decision-cta__title {
+  display: block;
+  margin: 0;
+  max-width: 42rem;
+  color: rgba(250, 246, 238, 0.95);
+  font-size: clamp(1.8rem, 3vw, 2.55rem);
+  line-height: 1.04;
+  font-weight: 790;
+  letter-spacing: -0.055em;
+}
+
+.decision-cta--decision-inline .decision-cta__body {
+  margin: 14px 0 22px;
+  max-width: 44rem;
+  color: rgba(226, 216, 201, 0.78);
+  font-size: clamp(1.05rem, 1.55vw, 1.2rem);
+  line-height: 1.58;
+}
+
+.decision-cta--decision-inline .decision-cta__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 20px;
+  border: 1px solid rgba(255, 244, 221, 0.12);
+  border-radius: 999px;
+  background: rgba(250, 246, 238, 0.94);
+  color: #171510;
+  font-size: 0.95rem;
+  font-weight: 850;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+
+.decision-cta--decision-inline .decision-cta__button:hover {
+  background: rgba(255, 248, 238, 1);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 600px) {
+  .decision-cta--decision-inline {
+    margin: 38px 0 42px;
+    padding: 24px 20px;
+    border-radius: 16px;
+  }
+
+  .decision-cta--decision-inline::before {
+    left: 20px;
+    width: 96px;
+  }
+
+  .decision-cta--decision-inline .decision-cta__title {
+    font-size: clamp(1.65rem, 7vw, 2.2rem);
+    line-height: 1.08;
+  }
+
+  .decision-cta--decision-inline .decision-cta__body {
+    font-size: 17px;
+    line-height: 1.56;
+  }
+
+  .decision-cta--decision-inline .decision-cta__button {
+    width: 100%;
+    min-height: 50px;
+    padding: 0 18px;
+  }
+}

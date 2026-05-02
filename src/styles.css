@@ -1,0 +1,259 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #1d1c19;
+}
+
+.page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(176, 165, 128, 0.035), transparent 34%),
+    linear-gradient(180deg, #1f1d19 0%, #1b1a17 100%);
+}
+
+.canvas {
+  position: relative;
+  width: min(100%, 390px);
+  min-height: 100vh;
+  margin: 0 auto;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255, 246, 225, 0.01) 0%,
+      rgba(255, 246, 225, 0.018) 42%,
+      rgba(255, 246, 225, 0.008) 72%,
+      rgba(255, 246, 225, 0.01) 100%
+    );
+}
+
+.canvas::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image:
+    linear-gradient(rgba(255, 245, 225, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 245, 225, 0.02) 1px, transparent 1px);
+  background-size: 3px 3px, 3px 3px;
+  mix-blend-mode: soft-light;
+}
+
+.lab {
+  position: relative;
+  height: 210px;
+}
+
+.art {
+  position: absolute;
+  pointer-events: none;
+}
+
+/* 1. trace / conduit / thread */
+.lab-trace {
+  margin-top: 12px;
+}
+
+.trace-wash {
+  top: 56px;
+  left: -10px;
+  width: 420px;
+  height: 84px;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 245, 220, 0.03) 16%,
+      rgba(255, 245, 220, 0.05) 48%,
+      rgba(255, 245, 220, 0.028) 78%,
+      transparent 100%
+    );
+  filter: blur(20px);
+}
+
+.trace-lines {
+  top: 72px;
+  left: 26px;
+  width: 338px;
+  height: 50px;
+  opacity: 0.42;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 245, 220, 0.05) 14%,
+      rgba(255, 245, 220, 0.12) 48%,
+      rgba(255, 245, 220, 0.05) 84%,
+      transparent 100%
+    );
+  -webkit-mask:
+    radial-gradient(circle at 0 50%, transparent 0 8px, #000 9px) left/33% 100% no-repeat,
+    linear-gradient(#000 0 0) center/100% 1px no-repeat;
+  mask:
+    radial-gradient(circle at 0 50%, transparent 0 8px, #000 9px) left/33% 100% no-repeat,
+    linear-gradient(#000 0 0) center/100% 1px no-repeat;
+}
+
+.trace-thread {
+  top: 79px;
+  left: 48px;
+  width: 286px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 245, 220, 0.02) 0%,
+    rgba(255, 245, 220, 0.18) 50%,
+    rgba(255, 245, 220, 0.02) 100%
+  );
+}
+
+/* 2. veil / field */
+.veil-band {
+  top: 48px;
+  left: -24px;
+  width: 438px;
+  height: 116px;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 245, 220, 0.03) 18%,
+      rgba(255, 245, 220, 0.05) 50%,
+      rgba(255, 245, 220, 0.025) 78%,
+      transparent 100%
+    );
+  filter: blur(26px);
+}
+
+.veil-side {
+  top: 26px;
+  right: -16px;
+  width: 142px;
+  height: 148px;
+  background:
+    radial-gradient(circle at 30% 40%, rgba(150, 139, 105, 0.08), transparent 46%);
+  filter: blur(30px);
+  opacity: 0.7;
+}
+
+/* 3. seam / rail / contour */
+.seam-main {
+  top: 92px;
+  left: 32px;
+  width: 290px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 245, 220, 0.03) 0%,
+    rgba(255, 245, 220, 0.14) 46%,
+    rgba(255, 245, 220, 0.03) 100%
+  );
+}
+
+.seam-offset {
+  top: 82px;
+  right: 48px;
+  width: 1px;
+  height: 72px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 245, 220, 0.02) 0%,
+    rgba(255, 245, 220, 0.08) 50%,
+    rgba(255, 245, 220, 0.02) 100%
+  );
+  opacity: 0.6;
+}
+
+.seam-fade {
+  top: 76px;
+  left: 24px;
+  width: 342px;
+  height: 34px;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.018), transparent 72%);
+  filter: blur(18px);
+  opacity: 0.45;
+}
+
+/* 4. plane / inset support */
+.plane-soft {
+  top: 28px;
+  left: 38px;
+  width: 300px;
+  height: 144px;
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.016)),
+    linear-gradient(135deg, rgba(141, 136, 99, 0.08), rgba(0, 0, 0, 0.03));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 245, 220, 0.05);
+}
+
+.plane-ring {
+  top: 18px;
+  right: 18px;
+  width: 156px;
+  height: 156px;
+  border-top: 1px solid rgba(255, 245, 220, 0.045);
+  border-right: 1px solid rgba(255, 245, 220, 0.03);
+  border-radius: 999px;
+  opacity: 0.45;
+}
+
+.plane-wash {
+  top: 18px;
+  left: 16px;
+  width: 342px;
+  height: 166px;
+  background:
+    radial-gradient(circle at 26% 32%, rgba(255, 245, 220, 0.04), transparent 30%);
+  filter: blur(28px);
+}
+
+/* 5. texture / dust / grid */
+.texture-fog {
+  top: 44px;
+  left: 18px;
+  width: 354px;
+  height: 112px;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 245, 220, 0.02) 20%,
+      rgba(255, 245, 220, 0.035) 50%,
+      rgba(255, 245, 220, 0.015) 78%,
+      transparent 100%
+    );
+  filter: blur(24px);
+}
+
+.texture-grid {
+  top: 54px;
+  right: 28px;
+  width: 94px;
+  height: 94px;
+  opacity: 0.22;
+  background-image: radial-gradient(rgba(255, 245, 220, 0.2) 0.7px, transparent 0.7px);
+  background-size: 11px 11px;
+}
+
+.texture-dust {
+  top: 68px;
+  left: 26px;
+  width: 124px;
+  height: 48px;
+  opacity: 0.18;
+  background-image: radial-gradient(rgba(255, 245, 220, 0.32) 0.7px, transparent 0.7px);
+  background-size: 14px 14px;
+}
