@@ -16,7 +16,7 @@ const SUPABASE_ANON_KEY =
   process.env.SUPABASE_ANON_KEY ||
   "sb_publishable_qeHpjmBA_STovuCQL-fjDQ_U5eOEoy-";
 
-const VERTICALS = ["plumbing", "electrical", "leaks", "foundation", "roofing", "hvac"];
+const VERTICALS = ["plumbing", "electrical", "leak", "foundation", "roofing", "hvac"];
 
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
   throw new Error("Missing Supabase env vars.");
