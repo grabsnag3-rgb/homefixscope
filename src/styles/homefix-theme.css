@@ -1705,3 +1705,29 @@ textarea:focus-visible {
   outline: 3px solid rgba(245, 121, 24, 0.72);
   outline-offset: 3px;
 }
+
+/* RELATED QUESTIONS CLICK FIX */
+
+.related-questions,
+.related-questions__list,
+.related-questions__item,
+.related-questions__link {
+  position: relative;
+}
+
+.related-questions__link {
+  z-index: 5;
+  pointer-events: auto;
+}
+
+.related-questions__text,
+.related-questions__arrow {
+  pointer-events: none;
+}
+
+.related-questions__item::before,
+.related-questions__item::after,
+.related-questions__link::before,
+.related-questions__link::after {
+  pointer-events: none !important;
+}
